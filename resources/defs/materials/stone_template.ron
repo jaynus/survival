@@ -1,0 +1,40 @@
+#![enable(implicit_some)]
+
+// https://www.makeitfrom.com/compare/Granite/Marble
+// http://www.matweb.com/search/DataSheet.aspx?MatGUID=a1c4c37b55e24765bcb63b4665b44f05
+
+[
+    (
+        name: "marble",
+        inherits: None,
+        category: Todo,
+        states: {
+            Solid: (
+                name: "marble",
+                density: 2700, // mg/cc
+                hardness: 310, // Brinell
+                porosity: 2, // Percentage / 1000
+                permeability: 10, // darcy * 1000
+                elasticity: 54000, // MPa
+                tensile_strength: 9, // mpa
+                tensile_yield: None,
+                compressive_yield_strength: 540, // mpa
+                impact_toughness: 40500,// mm/cm2
+                fatigue_strength: 0, // percentage of tensile
+                fracture_toughness: None, // ????
+                flexural_strength: 15, // mpa
+                shear_modulus: 27000, //mpa
+                poisson_ratio: 20, // * 100
+                electric_resistance: 99999999,
+                specific_heat_capacity: 870, // J/kg K
+                thermal_conductivity: 2900, // mW/m K
+                abrasive_hardness: 40, // ?
+                sprite: ("", 0),
+            ),
+        },
+        melt_point: 1500,
+        boil_point: None,
+        ignite_point: None,
+        freeze_point: 0,
+    )
+]

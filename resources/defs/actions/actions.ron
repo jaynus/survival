@@ -1,0 +1,46 @@
+#![enable(implicit_some)]
+[
+    (
+        category: Unspecified,
+        event: ActivateReaction("Fell Tree"),
+        name: "Fell Tree",
+        adjective: "",
+        source: Pawn,
+        base_time: 0,
+        conditions: [
+            (Me, Is, Has, Property(Chopping(1))),
+        ],
+        targets: [(Entity, Is, Has, Property(Foliage(Tree)))] 
+    ),
+    (
+        category: Unspecified,
+        event: Move(Target),
+        name: "Move To",
+        adjective: "",
+        source: Pawn,
+        base_time: 0,
+        conditions: [
+            (Me, Is, Has, Property(Movement([Walk])))
+        ],
+        post_conditions: [
+            ((Me, Is, Has, Target), true)
+        ],
+        
+    ),
+    (
+        category: Unspecified,
+        event: Pickup,
+        name: "Pickup",
+        adjective: "",
+        source: Pawn,
+        base_time: 0,
+        conditions: [
+            (Me, Is, Has, Property(Movement([Walk])))
+        ],
+        targets: [(Entity, Is, Has, Property(CanPickup))],
+        post_conditions: [
+            ((Me, Is, Has, Target), true)
+        ],
+    ),
+
+]

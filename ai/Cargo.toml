@@ -1,0 +1,37 @@
+[package]
+name = "ai"
+version = "0.1.0"
+authors = ["Walter Pearce <jaynus@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+core = { path = "../core" }
+survival_derive = { path = "../survival_derive" }
+goap = {path = "../external/goap" }
+iaus = { path = "../external/iaus" }
+psyche = { path = "../psyche" }
+body = { path = "../body" }
+
+serde = { version = "1.0", features = ["derive", "rc"] }
+hibitset = "0.6"
+pathfinding = "*"
+log = { version = "0.4.6", features = ["serde"] }
+strum = "*"
+strum_macros = "*"
+failure = "0.1"
+smallvec = "*"
+num-traits = "0.2"
+num-derive = "0.2"
+priority-queue = "0.6"
+crossbeam = "0.7"
+rayon = "1.1"
+shrinkwraprs = "0.2"
+parking_lot = "0.9"
+bit-set = "0.5"
+derivative = "1"
+
+indexmap = { version = "1", features = ["serde-1"] }
+
+[dev-dependencies]
+env_logger = "0.6"
+

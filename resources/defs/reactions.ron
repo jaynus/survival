@@ -1,0 +1,26 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Cut blocks",
+        duration: ( interaction: 1000, delay: 0, skill_weight: 100 ),
+        category: Stonecutting,
+        reagents: [
+            ( kind: Item("log"), consume: true ),
+            (
+                kind: Location(
+                    name: "stoneyard",
+                ),
+            ),
+            ( kind: Properties([Stonecutting(1)]) ),
+            (
+                kind: Skill(
+                    name: "Stonecutting",
+                ),
+            ),
+        ],
+        product: (
+            kind: Item("block"),
+            count: 4,
+        ),
+    )
+]

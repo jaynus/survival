@@ -1,0 +1,51 @@
+[package]
+name = "core"
+version = "0.1.0"
+authors = ["Walter Pearce <jaynus@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+amethyst = { path = "../../amethyst", default-features = false, features = ["nightly", "animation", "audio", "locale", "renderer", "saveload", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
+survival_derive = { path = "../survival_derive" }
+
+failure = "0.1"
+serde = { version = "1.0", features = ["derive", "rc"] }
+ron = { git = "https://github.com/ron-rs/ron.git" }
+fnv = "*"
+bitflags = "*"
+petgraph = { version = "*", features = ["serde-1"] }
+derivative = "*"
+strum = "*"
+strum_macros = "*"
+num-traits = "0.2"
+num-derive = "0.2"
+log = { version = "0.4.6", features = ["serde"] }
+hibitset = "0.6"
+specs-hierarchy = "0.5"
+smallvec = "*"
+walkdir = "*"
+rayon = "*"
+spmc = "*"
+fern = "*"
+indexmap = "*"
+itertools = "0.8"
+shrinkwraprs = "0.2"
+as-slice = "0.1.0"
+slice-deque = "0.2"
+arr_macro = "*"
+image = "0.22"
+imageproc = "0.19"
+
+rand = "0.7"
+rand_distr = "0.2"
+rand_xorshift = "0.2.0"
+
+env_logger = "0.6"
+
+[features]
+default = [ "debug_tiles"]
+nightly = []
+debug_tiles = []
+
+[dev-dependencies]
+criterion = "0.2"

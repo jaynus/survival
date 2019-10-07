@@ -1,0 +1,4 @@
+(
+  title: "sprite_camera_follow",
+  dimensions: Some((1400, 1200)),
+)

@@ -1,0 +1,19 @@
+[package]
+name = "goap"
+version = "0.1.0"
+authors = ["jaynus <jaynus@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4"
+derivative = "1"
+serde = {version = "1", features = ["derive"] }
+ron = { git = "https://github.com/ron-rs/ron.git" }
+pathfinding = "1"
+rayon = "1"
+
+
+[dev-dependencies]
+env_logger = "0.6"

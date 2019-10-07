@@ -1,0 +1,44 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Fell Tree",
+        duration: ( interaction: 1000, delay: 0, skill_weight: 100 ),
+        category: Woodcutting,
+        reagents: [
+            ( kind: Properties([Foliage(Tree)]), consume: true ),
+            ( kind: Properties([Chopping(1)]) ),
+            (
+                kind: Skill(
+                    name: "Woodcutting",
+                ),
+            ),
+        ],
+        product: (
+            kind: Item("log"),
+            count: 4,
+        ),
+    ),
+    (
+        name: "Cut planks",
+        duration: ( interaction: 1000, delay: 0, skill_weight: 100 ),
+        category: Woodcutting,
+        reagents: [
+            ( kind: Item("log"), consume: true ),
+            ( kind: Properties([Chopping(1)]) ),
+            (
+                kind: Location(
+                    name: "timberyard",
+                ),
+            ),
+            (
+                kind: Skill(
+                    name: "Woodcutting",
+                ),
+            ),
+        ],
+        product: (
+            kind: Item("plank"),
+            count: 4,
+        ),
+    )
+]

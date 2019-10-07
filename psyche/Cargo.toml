@@ -1,0 +1,12 @@
+[package]
+name = "psyche"
+version = "0.1.0"
+authors = ["Walter Pearce <jaynus@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+core = { path = "../core" }
+serde = { version = "1.0", features = ["derive", "rc"] }
+strum = "0.15"
+strum_macros = "0.15"
+log = { version = "0.4.6", features = ["serde"] }

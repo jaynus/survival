@@ -1,0 +1,22 @@
+(
+    axes: {
+        CameraX: Emulated(
+            pos: Key(D),
+            neg: Key(A),
+        ),
+        CameraY: Emulated(
+            pos: Key(W),
+            neg: Key(&S),
+        ),
+        CameraZ: MouseWheel( horizontal: false ),
+    },
+    actions: {
+        Select: [[Mouse(Left)]],
+        DoAction: [[Mouse(Right)]],
+
+        Pause: [[Key(Space)]],
+
+        UpZ: [[Key(Q)]],
+        DownZ: [[Key(E)]],
+    }
+)

@@ -1,0 +1,8 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "bone",
+        inherits: "marble",
+        category: Todo,
+    )
+]

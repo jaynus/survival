@@ -1,0 +1,18 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "default",
+        can_eat: [(Any, Any)],
+        digestion_parts: [
+	        (
+	        	body_part_name: "Stomach",
+	        	capacity: 2500, // mL
+	        	capacity_decay: (value: -300, time: 3600),
+	        	calorie_efficiency: 90,
+	        	hydration_effiency: 90,
+	        )
+        ],
+        calorie_burn_rate: (value: -300, time: 3600),
+        hydration_burn_rate: (value: -300, time: 3600),
+    ),
+]

@@ -1,0 +1,57 @@
+#cargo-features = ["profile-overrides"]
+
+[package]
+name = "survival"
+version = "0.1.0"
+authors = ["Walter Pearce <jaynus@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+amethyst = { path = "../amethyst", default-features = false, features = ["nightly", "animation", "audio", "locale", "renderer", "saveload", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
+log = { version = "0.4.6", features = ["serde"] }
+serde = { version = "1.0", features = ["derive", "rc"] }
+failure = "0.1"
+
+core = { path = "core" }
+map = { path = "map" }
+body = { path = "body" }
+ai = { path = "ai" }
+psyche = { path = "psyche" }
+survival_derive = { path = "survival_derive" }
+
+amethyst-imgui = { path = "../amethyst-imgui", features = ["docking"] }
+
+arrayref = "*"
+strum = "*"
+strum_macros = "*"
+num-traits = "0.2"
+num-derive = "0.2"
+lazy_static = "1.4"
+
+[dev-dependencies]
+approx = "0.3"
+criterion = "0.2"
+
+[[bin]]
+name = "survival_game"
+path = "src/game.rs"
+
+[lib]
+name = "survival"
+path = "src/lib.rs"
+
+[workspace]
+members = [
+    "ai",
+    "assets",
+    "psyche",
+    "body",
+    "core",
+    "survival_derive",
+    "external/worldgen",
+    "external/goap",
+    "external/iaus"
+]
+
+[profile.release]
+debug = true

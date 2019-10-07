@@ -1,0 +1,25 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Introvert",
+        description: "",
+        id: None,
+        effects: [
+            NeedEffect((
+                kind: Social,
+                value: Static(75),
+            )),
+        ],
+    ),
+    (
+        name: "Extrovert",
+        description: "",
+        id: None,
+        effects: [
+            NeedEffect((
+                kind: Social,
+                value: Static(-75),
+            )),
+        ],
+    )
+]

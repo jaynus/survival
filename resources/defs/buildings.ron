@@ -1,0 +1,43 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Timberyard",
+        flags: [],
+        sprite: SpriteRef(
+            source: Sheet("buildings"),
+            index: 0,
+        ),
+        dimensions: Cube( x: 3000, y: 2000, z: 1000 ), // 3m x 1m x 1m
+        properties: [],
+    ),
+	(
+        name: "Carpenter",
+        flags: [],
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 18,
+        ),
+        dimensions: Cube( x: 5000, y: 3000, z: 1000 ), // 4m x 2m x 1m
+        properties: [],
+    ),
+    (
+        name: "Stoneyard",
+        flags: [],
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 18,
+        ),
+        dimensions: Cube( x: 2000, y: 2000, z: 1000 ), // 4m x 2m x 1m
+        properties: [],
+    ),
+    (
+        name: "Cooking Pot",
+        flags: [],
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 18,
+        ),
+        dimensions: Cube( x: 1000, y: 1000, z: 1000 ), // 4m x 2m x 1m
+        properties: [],
+    ),
+]

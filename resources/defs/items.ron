@@ -1,0 +1,35 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Pickaxe",
+        category: Weapon,
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 55,
+        ),
+        dimensions: Cube(x: 25, y: 800, z: 25),
+        properties: [ Chopping(1) ],
+    ),
+    (
+        name: "Axe",
+        category: Weapon,
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 56,
+        ),
+        dimensions: Cube(x: 25, y: 800, z: 25),
+        properties: [ Chopping(1) ],
+    ),
+    (
+        name: "log",
+        category: Organic,
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            tint: (0.823, 0.411, 0.117, 1.0),
+            index: 97,
+        ),
+        dimensions: Cube(x: 900, y: 900, z: 900),
+        properties: [  ],
+    ),
+]
+    

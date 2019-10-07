@@ -1,0 +1,18 @@
+[package]
+name = "body"
+version = "0.1.0"
+authors = ["Walter Pearce <jaynus@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+core = { path = "../core" }
+serde = { version = "1.0", features = ["derive", "rc"] }
+log = { version = "0.4.6", features = ["serde"] }
+survival_derive = { path = "../survival_derive" }
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "body_benchmarks"
+harness = false

@@ -1,0 +1,3 @@
+[submodule "worldgen"]
+path = external/worldgen
+url = git@github.com:/jaynus/worldgen.git

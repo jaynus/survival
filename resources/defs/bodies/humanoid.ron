@@ -1,0 +1,407 @@
+#![enable(implicit_some)]
+[
+    (
+        name: "Humanoid",
+        inherits: None,
+        sprite: (
+            source: Sheet("default_map"),
+            index: 16,
+            scale: 1,
+            tint: (1, 1, 1, 1),
+        ),
+        parts: (
+            nodes: [
+                (
+                    name: "Head",
+                    group: "head",
+                    relative_size: 100,
+                    layers: [],
+                ),
+                (
+                    name: "Brain",
+                    group: "head",
+                    relative_size: 96,
+                    layers: [],
+                ),
+                (
+                    name: "Right Ear",
+                    group: "head",
+                    relative_size: 5,
+                    layers: [],
+                ),
+                (
+                    name: "Left Ear",
+                    group: "head",
+                    relative_size: 5,
+                    layers: [],
+                ),
+                (
+                    name: "Right Eye",
+                    group: "head",
+                    relative_size: 1,
+                    layers: [],
+                ),
+                (
+                    name: "Left Eye",
+                    group: "head",
+                    relative_size: 1,
+                    layers: [],
+                ),
+                (
+                    name: "Nose",
+                    group: "head",
+                    relative_size: 1,
+                    layers: [],
+                ),
+                (
+                    name: "Mouth",
+                    group: "head",
+                    relative_size: 3,
+                    layers: [],
+                ),
+                (
+                    name: "Neck",
+                    group: "torso",
+                    relative_size: 100,
+                    layers: [],
+                ),
+                (
+                    name: "Torso",
+                    group: "torso",
+                    relative_size: 2000,
+                    layers: [],
+                ),
+                (
+                    name: "Right Lung",
+                    group: "torso",
+                    relative_size: 200,
+                    layers: [],
+                ),
+                (
+                    name: "Left Lung",
+                    group: "torso",
+                    relative_size: 200,
+                    layers: [],
+                ),
+                (
+                    name: "Heart",
+                    group: "torso",
+                    relative_size: 50,
+                    layers: [],
+                ),
+                (
+                    name: "Liver",
+                    group: "torso",
+                    relative_size: 50,
+                    layers: [],
+                ),
+                (
+                    name: "Spleen",
+                    group: "torso",
+                    relative_size: 20,
+                    layers: [],
+                ),
+                (
+                    name: "Stomach",
+                    group: "torso",
+                    relative_size: 50,
+                    layers: [],
+                ),
+                (
+                    name: "Intestines",
+                    group: "torso",
+                    relative_size: 550,
+                    layers: [],
+                ),
+                (
+                    name: "Right Upper Arm",
+                    group: "rarm",
+                    relative_size: 350,
+                    layers: [],
+                ),
+                (
+                    name: "Left Upper Arm",
+                    group: "larm",
+                    relative_size: 350,
+                    layers: [],
+                ),
+                (
+                    name: "Right Lower Arm",
+                    group: "rarm",
+                    relative_size: 350,
+                    layers: [],
+                ),
+                (
+                    name: "Left Lower Arm",
+                    group: "larm",
+                    relative_size: 350,
+                    layers: [],
+                ),
+                (
+                    name: "Right Hand",
+                    group: "rarm",
+                    relative_size: 50,
+                    layers: [],
+                ),
+                (
+                    name: "Left Hand",
+                    group: "larm",
+                    relative_size: 50,
+                    layers: [],
+                ),
+                (
+                    name: "Right Upper Leg",
+                    group: "rleg",
+                    relative_size: 550,
+                    layers: [],
+                ),
+                (
+                    name: "Left Upper Leg",
+                    group: "lleg",
+                    relative_size: 550,
+                    layers: [],
+                ),
+                (
+                    name: "Right Lower leg",
+                    group: "rleg",
+                    relative_size: 450,
+                    layers: [],
+                ),
+                (
+                    name: "Left Lower Leg",
+                    group: "lleg",
+                    relative_size: 450,
+                    layers: [],
+                ),
+                (
+                    name: "Right Foot",
+                    group: "rleg",
+                    relative_size: 75,
+                    layers: [],
+                ),
+                (
+                    name: "Left Foot",
+                    group: "lleg",
+                    relative_size: 75,
+                    layers: [],
+                ),
+            ],
+            node_holes: [],
+            edge_property: directed,
+            edges: [
+                (0, 1, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (2, 0, (
+                    relation: [
+                        Outside,
+                        Right,
+                    ],
+                    relative_size: 0,
+                )),
+                (3, 0, (
+                    relation: [
+                        Outside,
+                        Left,
+                    ],
+                    relative_size: 0,
+                )),
+                (4, 0, (
+                    relation: [
+                        Outside,
+                        Right,
+                        Front,
+                    ],
+                    relative_size: 0,
+                )),
+                (5, 0, (
+                    relation: [
+                        Outside,
+                        Left,
+                        Front,
+                    ],
+                    relative_size: 0,
+                )),
+                (6, 0, (
+                    relation: [
+                        Outside,
+                        Front,
+                    ],
+                    relative_size: 0,
+                )),
+                (7, 0, (
+                    relation: [
+                        Outside,
+                        Front,
+                    ],
+                    relative_size: 0,
+                )),
+                (8, 0, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 8, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 10, (
+                    relation: [
+                        Inside,
+                        Right,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 11, (
+                    relation: [
+                        Inside,
+                        Left,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 12, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 13, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 14, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 15, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (9, 16, (
+                    relation: [
+                        Inside,
+                    ],
+                    relative_size: 0,
+                )),
+                (17, 9, (
+                    relation: [
+                        Outside,
+                        Right,
+                    ],
+                    relative_size: 0,
+                )),
+                (18, 9, (
+                    relation: [
+                        Outside,
+                        Left,
+                    ],
+                    relative_size: 0,
+                )),
+                (19, 17, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (20, 18, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (21, 19, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (22, 20, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (23, 9, (
+                    relation: [
+                        Outside,
+                        Right,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (24, 9, (
+                    relation: [
+                        Outside,
+                        Left,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (25, 23, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (26, 24, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (27, 25, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+                (28, 26, (
+                    relation: [
+                        Outside,
+                        Bottom,
+                    ],
+                    relative_size: 0,
+                )),
+            ],
+        ),
+        dimensions: (
+            mean: Cube(
+                x: 430,
+                y: 1760,
+                z: 200,
+            ),
+            deviation: Cube(
+                x: 20,
+                y: 700,
+                z: 50,
+            ),
+        ),
+        mass: (
+            mean: 69000,
+            deviation: 200,
+        ),
+        digestion: "default",
+        properties: [],
+    ),
+]

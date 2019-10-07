@@ -1,0 +1,14 @@
+#![enable(implicit_some, unwrap_newtypes)]
+
+[
+    (
+        name: "Cow",
+        sprite: SpriteRef(
+            source: Sheet("default_map"),
+            index: 53,
+        ),
+        body: "humanoid",
+        behavior: "Cow Root",
+        properties: [],
+    )
+]
