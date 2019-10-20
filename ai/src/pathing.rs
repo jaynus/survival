@@ -79,14 +79,11 @@ pub struct PathingFailure {
 #[derive(Shrinkwrap, Clone)]
 struct TileMapContainer(Option<Arc<RwLock<TileMap<RegionTile>>>>);
 impl TileMapContainer {
-    pub fn new(map: TileMap<RegionTile>) -> Self {
-        Self(Some(Arc::new(RwLock::new(map))))
-    }
-    pub fn empty() -> Self {
-        Self(None)
-    }
+    pub fn new(map: TileMap<RegionTile>) -> Self { Self(Some(Arc::new(RwLock::new(map)))) }
+    pub fn empty() -> Self { Self(None) }
 }
 
+/*
 pub struct PathingWorkSystem {
     // We store a copy of the target TileMap to allow multithreading
     pathing_request_reader_id: ReaderId<PathingRequestEvent>,
@@ -179,7 +176,7 @@ impl<'a, 'b> SystemDesc<'a, 'b, PathingWorkSystem> for PathingWorkSystemDesc {
         }
     }
 }
-
+*/
 fn bail(request: PathingRequestEvent, result_channel: &Sender<PathingResult>) {
     result_channel
         .send(Err(PathingFailure {

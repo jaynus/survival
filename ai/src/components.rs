@@ -1,8 +1,5 @@
 use crate::pathing::PathingResult;
-use core::{
-    amethyst::ecs::{Component, VecStorage},
-    fsm::{ActionEvent, ActionStatus},
-};
+use core::fsm::{ActionEvent, ActionStatus};
 
 pub use crate::behavior::UtilityStateComponent;
 
@@ -13,9 +10,6 @@ pub struct CurrentPathingComponent {
 impl CurrentPathingComponent {
     pub fn new(current_path: Option<PathingResult>) -> Self { Self { current_path } }
     pub fn finished(&mut self) { self.current_path = None; }
-}
-impl Component for CurrentPathingComponent {
-    type Storage = VecStorage<Self>;
 }
 
 #[derive(Debug, Clone)]
@@ -30,7 +24,4 @@ impl CurrentActionComponent {
             status: ActionStatus::default(),
         }
     }
-}
-impl Component for CurrentActionComponent {
-    type Storage = VecStorage<Self>;
 }

@@ -7,7 +7,7 @@ authors = ["Walter Pearce <jaynus@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = { path = "../amethyst", default-features = false, features = ["nightly", "animation", "audio", "locale", "renderer", "saveload", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
+amethyst = { path = "../amethyst", default-features = false, features = ["legion-ecs", "nightly", "animation", "audio", "locale", "renderer", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
 log = { version = "0.4.6", features = ["serde"] }
 serde = { version = "1.0", features = ["derive", "rc"] }
 failure = "0.1"

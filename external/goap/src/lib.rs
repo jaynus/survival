@@ -101,13 +101,13 @@ impl<'a, S: State> PlanNode<'a, S> {
             state,
         }
     }
-
+    #[allow(clippy::clone_double_ref)]
     fn neighbors<'b>(
         &self,
         actions: &'b [&'b dyn Action<S>],
         goal: &'b [&'b dyn Condition<S>],
     ) -> Vec<(PlanNode<'b, S>, usize)> {
-        let neighbors = actions
+        actions
             .par_iter()
             .filter_map(|action| {
                 if let Some(self_action) = &self.action {
@@ -121,17 +121,19 @@ impl<'a, S: State> PlanNode<'a, S> {
 
                 if action.check(&state_copy) {
                     let distance = Self::distance(&state_copy, &Some(*action), goal);
-                    Some((PlanNode::with_action(action.clone(), state_copy), distance))
+                    Some((
+                        PlanNode::with_action((*action).clone(), state_copy),
+                        distance,
+                    ))
                 } else {
                     None
                 }
             })
-            .collect::<Vec<_>>();
-        neighbors
+            .collect::<Vec<_>>()
     }
 
     fn distance(state: &S, action: &Option<&dyn Action<S>>, goal: &[&dyn Condition<S>]) -> usize {
-        let distance = if let Some(_) = action {
+        if action.is_some() {
             goal.par_iter()
                 .filter_map(|condition| {
                     if !condition.check(&state) {
@@ -143,9 +145,7 @@ impl<'a, S: State> PlanNode<'a, S> {
                 .sum()
         } else {
             goal.len()
-        };
-
-        distance
+        }
     }
 }
 
@@ -154,6 +154,7 @@ pub struct Planner<S: State> {
     _marker: PhantomData<S>,
 }
 impl<S: State> Planner<S> {
+    #[allow(clippy::clone_double_ref)]
     pub fn plan<'b>(
         state: &S,
         goal: &'b [&'b dyn Condition<S>],

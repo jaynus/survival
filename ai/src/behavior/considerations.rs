@@ -14,7 +14,7 @@ pub fn hunger() -> Arc<ConsiderationFn<World>> {
             },
             power: 2.0,
         })),
-        Box::new(|consideration, state| {
+        Box::new(|consideration, _| {
             let result = consideration.curve.as_ref().unwrap().transform(155.0);
             log::trace!("{} = {}", consideration.name().unwrap(), result);
             result

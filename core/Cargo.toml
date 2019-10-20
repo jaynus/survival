@@ -5,7 +5,7 @@ authors = ["Walter Pearce <jaynus@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = { path = "../../amethyst", default-features = false, features = ["nightly", "animation", "audio", "locale", "renderer", "saveload", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
+amethyst = { path = "../../amethyst", default-features = false, features = ["legion-ecs", "nightly", "animation", "audio", "locale", "renderer", "vulkan", "gltf", "experimental-spirv-reflection", "shader-compiler", "tiles"] }
 survival_derive = { path = "../survival_derive" }
 
 failure = "0.1"

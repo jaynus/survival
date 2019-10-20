@@ -1,61 +1,51 @@
-use core::amethyst::{
-    core::Time,
-    ecs::{Entities, ParJoin, Read, ReadStorage, RunNow, SystemData, World, WriteStorage},
-};
+use super::*;
+use core::amethyst::core::{legion::*, Time};
+use crossbeam::queue::SegQueue;
 use rayon::prelude::*;
 
-use super::*;
+pub struct UtilitySystem<R> {
+    runner: R,
+}
+impl<R> UtilitySystem<R>
+where
+    R: FnMut(&mut World),
+{
+    fn with(runner: R) -> Self { Self { runner } }
+}
+impl<R> ThreadLocal for UtilitySystem<R>
+where
+    R: FnMut(&mut World),
+{
+    fn run(&mut self, world: &mut World) { (self.runner)(world) }
+    fn dispose(self, world: &mut World) {}
+}
+pub struct UtilitySystemDesc;
+impl UtilitySystemDesc {
+    fn build(mut self, world: &mut World) -> Box<dyn ThreadLocal> {
+        let mut query = <(Write<UtilityStateComponent>)>::query();
 
-type UtilitySystemData<'s> = (
-    Read<'s, Time>,
-    Entities<'s>,
-    ReadStorage<'s, UtilityStateComponent>,
-);
+        let runner = move |world: &mut World| {
+            let mut updated = {
+                let time = world.resources.get::<Time>().unwrap();
 
-pub struct UtilitySystem {}
-impl<'s> RunNow<'s> for UtilitySystem {
-    fn setup(&mut self, world: &mut World) {
-        log::trace!("UtilitySystem::setup()");
-        UtilitySystemData::setup(world);
-    }
+                let timestamp = time.absolute_time();
 
-    fn run_now(&mut self, world: &World) {
-        let mut updated = {
-            let (time, entities, utility_storage) = UtilitySystemData::fetch(world);
-            let timestamp = time.absolute_time();
+                query.par_for_each(world, |mut utility| {
+                    utility.available_decisions = utility
+                        .available_decisions
+                        .par_iter()
+                        .map(|entry| {
+                            let mut entry = entry.clone();
+                            entry.last_tick = timestamp;
+                            entry.last_score = entry.decision.score(world);
 
-            (&entities, &utility_storage)
-                .par_join()
-                .map(move |(entity, utility)| {
-                    (
-                        entity,
-                        utility
-                            .available_decisions
-                            .par_iter()
-                            .map(|entry| {
-                                let mut entry = entry.clone();
-                                entry.last_tick = timestamp;
-                                entry.last_score = entry.decision.score(world);
-
-                                entry
-                            })
-                            .collect(),
-                    )
-                })
-                .collect::<Vec<_>>()
+                            entry
+                        })
+                        .collect();
+                });
+            };
         };
 
-        {
-            let (mut utility_storage,) = <(WriteStorage<'_, UtilityStateComponent>,)>::fetch(world);
-
-            updated.drain(..).for_each(|(entity, decisions)| {
-                let utility = utility_storage.get_mut(entity).unwrap();
-                utility.available_decisions = decisions;
-            });
-        }
-    }
-
-    fn dispose(self: Box<Self>, _: &mut World) {
-        log::trace!("Dispose UtilitySystem");
+        Box::new(UtilitySystem::with(runner))
     }
 }

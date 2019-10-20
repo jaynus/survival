@@ -2,12 +2,9 @@ use rayon::prelude::*;
 
 use super::CurrentGoalComponent;
 use core::{
-    amethyst::{
-        core::{SystemDesc, Time},
-        ecs::{
-            Component, Entities, Entity, ParJoin, Read, ReadExpect, ReadStorage, System,
-            SystemData, VecStorage, World, WriteStorage,
-        },
+    amethyst::core::{
+        legion::{system::PreparedWorld, *},
+        Time,
     },
     components::PropertiesComponent,
     defs::{
@@ -22,20 +19,18 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+pub type ConditionCachePtr = Arc<Mutex<ConditionCache>>;
+pub type ConditionCache = HashMap<fsm::Condition<ActionConditionValue>, (u64, bool)>;
+
 pub struct GoapPlannerComponent {
-    condition_cache: Arc<Mutex<HashMap<fsm::Condition<ActionConditionValue>, (u64, bool)>>>,
+    condition_cache: ConditionCachePtr,
 }
 impl GoapPlannerComponent {
-    pub fn new(
-        base_conditions: HashMap<fsm::Condition<ActionConditionValue>, (u64, bool)>,
-    ) -> Self {
+    pub fn new(base_conditions: ConditionCache) -> Self {
         Self {
             condition_cache: Arc::new(Mutex::new(base_conditions)),
         }
     }
-}
-impl Component for GoapPlannerComponent {
-    type Storage = VecStorage<Self>;
 }
 
 #[derive(Derivative)]
@@ -60,13 +55,13 @@ impl<'a> GoapAction<'a> {
     }
 }
 impl<'a, 'state> goap::Action<GoapState<'a>> for GoapAction<'a> {
-    fn unique_id(&self) -> u64 { self.action.id.unwrap() as u64 }
+    fn unique_id(&self) -> u64 { u64::from(self.action.id.unwrap()) }
 
     fn conditions(&self) -> &[&dyn goap::Condition<GoapState<'a>>] {
         self.conditions_map.as_slice()
     }
 
-    fn apply(&self, state: &mut GoapState<'a>) {}
+    fn apply(&self, _: &mut GoapState<'a>) {}
 }
 
 fn check_condition(condition: &fsm::Condition<ActionConditionValue>, state: &GoapState) -> bool {
@@ -76,7 +71,7 @@ fn check_condition(condition: &fsm::Condition<ActionConditionValue>, state: &Goa
     let result = match condition.target {
         ConditionTarget::Me => match condition.kind {
             ConditionKind::Has => true,
-            ConditionKind::Near(distance) => unimplemented!(),
+            ConditionKind::Near(_distance) => unimplemented!(),
         },
         ConditionTarget::Entity => {
             // Search to see if an entity matches
@@ -112,84 +107,68 @@ impl<'a> goap::Condition<GoapState<'a>> for fsm::Condition<ActionConditionValue>
 pub struct GoapState<'a> {
     current_frame: u64,
     source_entity: Entity,
-    condition_cache: Arc<Mutex<HashMap<fsm::Condition<ActionConditionValue>, (u64, bool)>>>,
+    condition_cache: ConditionCachePtr,
 
     #[derivative(Debug = "ignore")]
-    storage: &'a <PropertiesComponent as Component>::Storage,
-}
-
-pub struct GoapPlannerSystem {
-    condition_cache: HashMap<fsm::Condition<ActionConditionValue>, (u64, bool)>,
-}
-
-impl<'s> System<'s> for GoapPlannerSystem {
-    type SystemData = (
-        Entities<'s>,
-        Read<'s, Time>,
-        ReadExpect<'s, DefinitionStorage<ActionDefinition>>,
-        WriteStorage<'s, GoapPlannerComponent>,
-        ReadStorage<'s, CurrentGoalComponent>,
-        ReadStorage<'s, PropertiesComponent>,
-    );
-
-    fn run(
-        &mut self,
-        (entities, time, action_defs, mut planner_storage, goal_storage, properties_storage): Self::SystemData,
-    ) {
-        let actions = action_defs
-            .raw_storage()
-            .iter()
-            .map(|action| GoapAction::new(action))
-            .collect::<Vec<_>>();
-        let action_refs = actions
-            .iter()
-            .map(|a| a as &dyn goap::Action<GoapState>)
-            .collect::<Vec<_>>();
-
-        log::trace!("GoapPlannerSystem::run");
-        (&entities, &mut planner_storage, &goal_storage)
-            .par_join()
-            .for_each(|(source_entity, planner_data, goal_data)| {
-                log::trace!("GoapPlannerSystem::iter");
-                let state = GoapState {
-                    source_entity,
-                    current_frame: time.frame_number(),
-                    condition_cache: planner_data.condition_cache.clone(),
-                    storage: properties_storage.unprotected_storage(),
-                };
-
-                let goal_action = action_defs.get(goal_data.action_id).unwrap();
-                let goal_conditions_refs = goal_action
-                    .conditions
-                    .iter()
-                    .map(|a| a as &dyn goap::Condition<GoapState>)
-                    .collect::<Vec<_>>();
-
-                let plan = goap::Planner::plan(&state, &goal_conditions_refs, &action_refs);
-
-                log::trace!("Resolved plan: {:?}", plan);
-            });
-    }
+    storage: &'a PreparedWorld,
 }
 
 #[derive(Default)]
-pub struct GoapPlannerSystemDesc;
-impl<'a, 'b> SystemDesc<'a, 'b, GoapPlannerSystem> for GoapPlannerSystemDesc {
-    fn build(self, world: &mut World) -> GoapPlannerSystem {
-        <GoapPlannerSystem as System<'_>>::SystemData::setup(world);
+pub struct GoapPlannerSystemDesc {}
+impl SystemDesc for GoapPlannerSystemDesc {
+    fn build(mut self, world: &mut World) -> Box<dyn Schedulable> {
+        let frame = world.resources.get::<Time>().unwrap().frame_number();
 
-        log::trace!("GoapPlannerSystemDesc::build()");
-
-        let frame = world.fetch::<Time>().frame_number();
-
-        let action_defs = world.fetch::<DefinitionStorage<ActionDefinition>>();
+        let action_defs = world
+            .resources
+            .get::<DefinitionStorage<ActionDefinition>>()
+            .unwrap();
         let mut condition_cache = HashMap::with_capacity(action_defs.len());
         for action in action_defs.iter() {
             for condition in &action.conditions {
                 condition_cache.insert(condition.clone(), (frame, false));
             }
         }
-        GoapPlannerSystem { condition_cache }
+        world.resources.insert(condition_cache);
+
+        SystemBuilder::<()>::new("GoapPlannerSystem")
+            .read_resource::<Time>()
+            .read_resource::<DefinitionStorage<ActionDefinition>>()
+            .read_component::<PropertiesComponent>()
+            .with_query(<(Read<CurrentGoalComponent>, Write<GoapPlannerComponent>)>::query())
+            .build(move |_, world, (time, action_defs), query| {
+                let actions = action_defs
+                    .raw_storage()
+                    .iter()
+                    .map(|action| GoapAction::new(action))
+                    .collect::<Vec<_>>();
+                let action_refs = actions
+                    .iter()
+                    .map(|a| a as &dyn goap::Action<GoapState>)
+                    .collect::<Vec<_>>();
+
+                log::trace!("GoapPlannerSystem::run");
+                query.par_entities_for_each(|(source_entity, (mut goal_data, planner_data))| {
+                    log::trace!("GoapPlannerSystem::iter");
+                    let state = GoapState {
+                        source_entity,
+                        current_frame: time.frame_number(),
+                        condition_cache: planner_data.condition_cache.clone(),
+                        storage: world,
+                    };
+
+                    let goal_action = action_defs.get(goal_data.action_id).unwrap();
+                    let goal_conditions_refs = goal_action
+                        .conditions
+                        .iter()
+                        .map(|a| a as &dyn goap::Condition<GoapState>)
+                        .collect::<Vec<_>>();
+
+                    let plan = goap::Planner::plan(&state, &goal_conditions_refs, &action_refs);
+
+                    log::trace!("Resolved plan: {:?}", plan);
+                });
+            })
     }
 }
 
@@ -204,37 +183,47 @@ fn calculate_hash<T: std::hash::Hash>(t: &T) -> u64 {
 mod tests {
     use super::*;
     use core::{
-        amethyst::ecs::{Builder, WorldExt},
+        amethyst::core::legion::{Universe, World},
         defs::Named,
     };
 
-    fn add_test_goap_stuff(system: &GoapPlannerSystem, world: &mut World) {
+    fn add_test_goap_stuff(world: &mut World) {
         let action_id = world
-            .fetch::<DefinitionStorage<ActionDefinition>>()
+            .resources
+            .get::<DefinitionStorage<ActionDefinition>>()
+            .unwrap()
             .find("Fell Tree")
             .unwrap()
             .id()
             .unwrap();
 
-        world
-            .create_entity()
-            .with(GoapPlannerComponent::new(system.condition_cache.clone()))
-            .with(CurrentGoalComponent { action_id })
-            .build();
+        let cache = world.resources.get::<ConditionCache>().unwrap().clone();
 
-        world.fetch_mut::<Time>().increment_frame_number();
+        world.insert(
+            (),
+            vec![(
+                CurrentGoalComponent { action_id },
+                GoapPlannerComponent::new(cache),
+            )],
+        );
+
+        world
+            .resources
+            .get_mut::<Time>()
+            .unwrap()
+            .increment_frame_number();
     }
 
     #[test]
     fn simple_planner_test() {
         let _ = env_logger::builder().is_test(true).try_init();
 
-        let mut world = World::new();
+        let universe = Universe::new();
+        let mut world = universe.create_world();
 
-        <GoapPlannerSystem as System>::SystemData::setup(&mut world);
-        world.insert(Time::default());
+        world.resources.insert(Time::default());
 
-        world.insert(
+        world.resources.insert(
             DefinitionStorage::<ActionDefinition>::from_folder(
                 "/home/jaynus/dev/survival/resources/defs/actions",
             )
@@ -243,8 +232,8 @@ mod tests {
 
         let mut system = GoapPlannerSystemDesc::default().build(&mut world);
 
-        add_test_goap_stuff(&system, &mut world);
-        let data = <GoapPlannerSystem as System>::SystemData::fetch(&world);
-        system.run(data);
+        add_test_goap_stuff(&mut world);
+
+        system.run(&world);
     }
 }
